@@ -1,4 +1,3 @@
-//using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
@@ -59,7 +58,7 @@ public class DualGridTilemap : MonoBehaviour
     Tilemap invisibleTilemap;
     Color invisibleColor = new Color(1, 1, 1, 0);
 
-    void Start()
+    void Awake()
     {
         float chanceOffset = 0;
 

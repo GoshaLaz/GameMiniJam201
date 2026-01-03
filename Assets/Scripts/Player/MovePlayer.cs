@@ -17,10 +17,12 @@ public class MovePlayer : MonoBehaviour
 
     private Rigidbody2D rb;
     private float moveInput;
+    private float prevVerticalInput;
 
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
     private bool isGrounded;
+    private bool isFacingRight = true;
 
     void Awake()
     {
@@ -30,6 +32,10 @@ public class MovePlayer : MonoBehaviour
     void Update()
     {
         moveInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+
+        bool jumpPressed = verticalInput > 0 && prevVerticalInput <= 0;
+        bool jumpHeld = verticalInput > 0;
 
         isGrounded = Physics2D.OverlapCircle(
             groundCheck.position,
@@ -42,10 +48,12 @@ public class MovePlayer : MonoBehaviour
         {
             coyoteTimeCounter = coyoteTime;
         }
-        else { 
-        coyoteTimeCounter -= Time.deltaTime;
+        else
+        { 
+            coyoteTimeCounter -= Time.deltaTime;
         }
-        if (Input.GetButtonDown("Jump"))
+
+        if (jumpPressed)
         {
             jumpBufferCounter = jumpBufferTime;
         }
@@ -63,7 +71,7 @@ public class MovePlayer : MonoBehaviour
         }
 
 
-        if (Input.GetButtonUp("Jump") && rb.linearVelocity.y > 0)
+        if (!jumpHeld && rb.linearVelocity.y > 0)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
         }
@@ -72,7 +80,7 @@ public class MovePlayer : MonoBehaviour
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime; 
         }
-        else if (rb.linearVelocity.y > 0 && !Input.GetButton("Jump"))
+        else if (rb.linearVelocity.y > 0 && !jumpHeld)
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
@@ -82,5 +90,13 @@ public class MovePlayer : MonoBehaviour
     {
         float control = isGrounded ? 1f : airControlMultiplier;
         rb.linearVelocity = new Vector2(moveInput * moveSpeed * control, rb.linearVelocity.y);
+
+        if ((isFacingRight && moveInput < 0) || (!isFacingRight && moveInput > 0))
+        {
+            isFacingRight = !isFacingRight;
+            Vector3 currentScale = transform.localScale;
+            currentScale.x *= -1;
+            transform.localScale = currentScale;
+        }
     }
 }

@@ -1,33 +1,87 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LazerManager : MonoBehaviour
 {
-    public float maxDistance = 100f;
-    public LayerMask solidLayer;
+    [SerializeField] private LayerMask solidLayer;
+    [SerializeField] private LineRenderer lazerRender;
 
-    public SpriteRenderer spriteRenderer;
+    const int MAX_REFLECTIONS = 10;
+    const float MAX_DISTANCE = 100f;
+
+    bool isActive = true;
+    bool interacted = false;
+    bool interactedLastFrame = false;
+
+    ActivationManager lastReciever = null;
 
     void Update()
     {
-        CastLaser();
+        lazerRender.enabled = isActive;
+        if (!isActive) return;
+
+        CastLazer();
     }
 
-    void CastLaser()
+    private void CastLazer()
     {
         Vector2 origin = transform.position;
-        Vector2 direction = transform.right; 
+        Vector2 direction = -transform.right;
 
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction, maxDistance, solidLayer);
+        lazerRender.positionCount = 1;
+        lazerRender.SetPosition(0, origin);
 
-        float distance = maxDistance;
-
-        if (hit.collider != null)
+        for (int i = 0; i < MAX_REFLECTIONS; i++)
         {
-            distance = hit.distance;
+            RaycastHit2D hit = Physics2D.Raycast(origin, direction, MAX_DISTANCE, solidLayer);
+
+            if (!hit)
+            {
+                AddPoint(origin + direction * MAX_DISTANCE);
+                break;
+            }
+
+            AddPoint(hit.point);
+
+            if (hit.collider.CompareTag("Receiver"))
+            {
+                if (!interactedLastFrame)
+                {
+                    hit.collider.GetComponent<ActivationManager>().Interaction();
+                    lastReciever = hit.collider.GetComponent<ActivationManager>();
+                    interactedLastFrame = true;
+                    interacted = true;
+                }
+
+                return;
+            }
+
+            if (hit.collider.CompareTag("Mirror"))
+            {
+                direction = Vector2.Reflect(direction, hit.normal).normalized;
+                origin = hit.point + direction * 0.02f;
+                continue;
+            }
+
+            break;
         }
 
-        spriteRenderer.size = new Vector2(distance, spriteRenderer.size.y);
+        if (interacted && lastReciever != null)
+        {
+            interacted = false;
+            interactedLastFrame = false;
+            lastReciever.Interaction();
+            lastReciever = null;
+        }
+    }
 
-        spriteRenderer.transform.localPosition = new Vector3(distance / 2f, 0f, 0f);
+    private void AddPoint(Vector2 point)
+    {
+        lazerRender.positionCount++;
+        lazerRender.SetPosition(lazerRender.positionCount - 1, point);
+    }
+
+    public void Activate()
+    {
+        isActive = !isActive;
     }
 }

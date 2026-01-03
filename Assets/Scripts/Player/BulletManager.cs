@@ -25,8 +25,8 @@ public class BulletManager : MonoBehaviour
             if (hit.collider.GetComponent<RopeManager>() != null)
             {
                 hit.collider.GetComponent<RopeManager>().FreeTheBox();
+                Destroy(hit.collider.gameObject);
             }
-            Destroy(hit.collider.gameObject);
             Destroy(gameObject);
         }
     }
