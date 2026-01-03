@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 047b04c796a5dd349add276767287a87
+guid: cf21e15d8fa0a1a4398d8c86f84003f7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1547804281730946603
-    second: Line_0
+      213: 9082429109045791810
+    second: Laser_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -113,45 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Line_0
+      name: Laser_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 6
+        y: 5
         width: 16
-        height: 4
+        height: 6
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b26d66a2bc7ea7510800000000000000
-      internalID: 1547804281730946603
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Line_1
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 6
-        width: 16
-        height: 4
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c78b15e7a2860794daad5941a1e96568
-      internalID: 1056493885
+      spriteID: 24c875667254b0e70800000000000000
+      internalID: 9082429109045791810
       vertices: []
       indices: 
       edges: []
@@ -160,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: cb64ea40f2c5f504d938dda1829331fb
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -168,12 +146,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      Line_0: 1547804281730946603
-      Line_1: 1056493885
+      Laser_0: 9082429109045791810
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
