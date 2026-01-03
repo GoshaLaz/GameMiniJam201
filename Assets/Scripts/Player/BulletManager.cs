@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class BulletManager : MonoBehaviour
 {
-    public float timerDestroy;
+    [SerializeField] private LayerMask layerToCheck;
+    [SerializeField] private float timerDestroy;
 
     private void FixedUpdate()
     {
