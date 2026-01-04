@@ -29,7 +29,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Radius: 6.93
+    - _Radius: 3.0126653
     - _RadiusPx: 130
     - _ScreenAspect: 1.7777778
     - _Softness: 0.01
@@ -37,7 +37,7 @@ Material:
     m_Colors:
     - _Center: {r: 0.921875, g: 0.22916667, b: 10, a: 0}
     - _CenterPx: {r: 0.921875, g: 0.22916667, b: 10, a: 0}
-    - _CenterUV: {r: 0.10100651, g: 0.21375243, b: 0, a: 0}
+    - _CenterUV: {r: 0.265625, g: 0.625, b: 0, a: 0}
     - _ScreenSize: {r: 640, g: 360, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
