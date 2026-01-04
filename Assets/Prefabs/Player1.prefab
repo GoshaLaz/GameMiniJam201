@@ -137,8 +137,11 @@ MonoBehaviour:
   interactionRadius: 2.5
   interactionLayer:
     serializedVersion: 2
-    m_Bits: 5120
+    m_Bits: 13312
+  rotationDuration: 1
   canPickUpBox: 0
+  canMove: 0
+  isFacingRight: 1
 --- !u!114 &4069546901581236814
 MonoBehaviour:
   m_ObjectHideFlags: 0

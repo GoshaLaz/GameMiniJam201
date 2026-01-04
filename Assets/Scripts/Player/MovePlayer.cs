@@ -1,7 +1,10 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MovePlayer : MonoBehaviour
 {
+    [Header("Movement")]
     [SerializeField] private float moveSpeed = 8f;
     [SerializeField] private float airControlMultiplier = 0.7f;
     [Space(5)]
@@ -14,15 +17,19 @@ public class MovePlayer : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private LayerMask groundLayer;
-    [Space(5)]
+
+    [Header("Interaction")]
     [SerializeField] private float interactionRadius = 2;
     [SerializeField] private LayerMask interactionLayer;
+    [Space(5)]
+    [SerializeField] private float rotationDuration;
 
     [HideInInspector] public bool canPickUpBox;
     [HideInInspector] public bool canMove;
     [HideInInspector] public bool isFacingRight = true;
 
     GameObject boxToCarry;
+    GameObject mirrorToRotate;
 
     Rigidbody2D rb;
     float moveInput;
@@ -31,6 +38,9 @@ public class MovePlayer : MonoBehaviour
     float coyoteTimeCounter;
     float jumpBufferCounter;
     bool isGrounded;
+
+    bool isInteractingWithMirror;
+    bool mirrorIsRotating;
 
     void Start()
     {
@@ -97,11 +107,23 @@ public class MovePlayer : MonoBehaviour
         {
             Interaction();
         }
+
+        if (isInteractingWithMirror && !mirrorIsRotating)
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                StartCoroutine(RotateMirror(-90));
+            } 
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                StartCoroutine(RotateMirror(90));
+            }
+        }
     }
 
     void FixedUpdate()
     {
-        if (!canMove) return;
+        if (!canMove || isInteractingWithMirror) return;
 
         float control = isGrounded ? 1f : airControlMultiplier;
         rb.linearVelocity = new Vector2(moveInput * moveSpeed * control, rb.linearVelocity.y);
@@ -119,12 +141,20 @@ public class MovePlayer : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.CircleCast(transform.position, interactionRadius, Vector2.zero, 0, interactionLayer);
 
-        if (!hit) return;
+        if (!hit || !canMove) return;
 
         if (hit.collider.CompareTag("Lever"))
         {
             hit.collider.GetComponent<ActivationManager>().Interaction();
             hit.collider.GetComponent<LeverManager>().Interaction();
+        } else if (hit.collider.CompareTag("Mirror"))
+        {
+            if (isInteractingWithMirror) mirrorToRotate = null;
+            else mirrorToRotate = hit.collider.gameObject;
+
+            isInteractingWithMirror = !isInteractingWithMirror;
+            moveInput = 0;
+            rb.linearVelocity = Vector2.zero;
         }
         else if (canPickUpBox && hit.collider.CompareTag("Box") && boxToCarry == null && hit.collider.GetComponent<Rigidbody2D>().bodyType != RigidbodyType2D.Static)
         {
@@ -148,5 +178,29 @@ public class MovePlayer : MonoBehaviour
             boxToCarry.transform.parent = null;
             boxToCarry = null;
         }
+    }
+
+    IEnumerator RotateMirror(float angleToRotate)
+    {
+        mirrorIsRotating = true;
+
+        Transform mirrorTransform = mirrorToRotate.transform;
+        float startAngle = mirrorTransform.eulerAngles.z;
+        float endAngle = mirrorTransform.eulerAngles.z + angleToRotate;
+        float timer = 0f;
+
+        while (timer < rotationDuration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / rotationDuration;
+
+            float currentAngle = Mathf.LerpAngle(startAngle, endAngle, t);
+            mirrorTransform.rotation = Quaternion.Euler(0f, 0f, currentAngle);
+
+            yield return null;
+        }
+
+        mirrorTransform.rotation = Quaternion.Euler(0f, 0f, endAngle);
+        mirrorIsRotating = false;
     }
 }

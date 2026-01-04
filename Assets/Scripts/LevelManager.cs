@@ -25,7 +25,25 @@ public class LevelManager : MonoBehaviour
 
         circleFade.SetFloat("_ScreenAspect", (float)Screen.width / Screen.height);
 
-        StartCoroutine(IntroAnimation());
+        if (player_1 != null)
+            StartCoroutine(IntroAnimation());
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartLvl();
+        }
+    }
+
+    public void RestartLvl() {
+        StartCoroutine(SimpleOutroAnimation());
+    }
+
+    public void NextLevel()
+    {
+        StartCoroutine(SimpleOutro2Animation());
     }
 
     IEnumerator IntroAnimation()
@@ -118,6 +136,72 @@ public class LevelManager : MonoBehaviour
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         Debug.Log("Next Level!");
+    }
+
+    IEnumerator SimpleOutroAnimation()
+    {
+        MovePlayer player = null;
+
+        if (player_1.gameObject.transform.localScale == Vector3.zero)
+            player = player_2;
+        else
+            player = player_1;
+
+        SetCircleOnPos(player.transform.position);
+
+        float currentRadius = 3f;
+        circleFade.SetFloat("_Radius", currentRadius);
+
+        while (currentRadius > radiusToStop)
+        {
+            currentRadius -= speedOfTransition_after * Time.deltaTime;
+            circleFade.SetFloat("_Radius", currentRadius);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1);
+
+        while (currentRadius > -0.01f)
+        {
+            currentRadius -= speedOfTransition_before * Time.deltaTime;
+            circleFade.SetFloat("_Radius", currentRadius);
+            yield return null;
+        }
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    IEnumerator SimpleOutro2Animation()
+    {
+        MovePlayer player = null;
+
+        if (player_1.gameObject.transform.localScale == Vector3.zero)
+            player = player_2;
+        else
+            player = player_1;
+
+        SetCircleOnPos(player.transform.position);
+
+        float currentRadius = 3f;
+        circleFade.SetFloat("_Radius", currentRadius);
+
+        while (currentRadius > radiusToStop)
+        {
+            currentRadius -= speedOfTransition_after * Time.deltaTime;
+            circleFade.SetFloat("_Radius", currentRadius);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1);
+
+        while (currentRadius > -0.01f)
+        {
+            currentRadius -= speedOfTransition_before * Time.deltaTime;
+            circleFade.SetFloat("_Radius", currentRadius);
+            yield return null;
+        }
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void PlayerInTheDoor(MovePlayer player)
