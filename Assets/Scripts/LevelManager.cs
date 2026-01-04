@@ -8,7 +8,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject transitionObject;
     [SerializeField] private float speedOfTransition_before;
     [SerializeField] private float speedOfTransition_after;
-    [SerializeField] private float timeToStop;
+    [SerializeField] private float radiusToStop;
 
     [SerializeField] private MovePlayer player_1;
     [SerializeField] private MovePlayer player_2;
@@ -16,7 +16,6 @@ public class LevelManager : MonoBehaviour
     Material circleFade;
     Camera mainCamera;
     RectTransform imageRect;
-    bool hadStop;
 
     void Awake()
     {
@@ -31,11 +30,12 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator IntroAnimation()
     {
-        hadStop = false;
+        player_1.gameObject.SetActive(false);
 
-        player_1.canMove = false;  player_1.canPickUpBox = false;
+        player_1.canMove = false; player_1.canPickUpBox = false;
         player_1.gameObject.GetComponent<Shooter>().canShoot = false;
         player_1.gameObject.GetComponent<Shooter>().haveBullet = true;
+        player_1.gameObject.GetComponent<Shooter>().aim.gameObject.SetActive(false);
 
         if (player_2 != null)
         {
@@ -45,80 +45,79 @@ public class LevelManager : MonoBehaviour
 
         SetCircleOnPos(player_1.transform.position);
 
-        float currentRadius = -0.01f, timer = 0;
+        float currentRadius = -0.01f;
         circleFade.SetFloat("_Radius", currentRadius);
 
-        while (currentRadius < 3f)
+        while (currentRadius < radiusToStop)
         {
-            if (timer > 0)
-            {
-                timer -= Time.deltaTime;
-                hadStop = true;
-                continue;
-            }
-
-            float speedOfTransition = (hadStop) ? speedOfTransition_after : speedOfTransition_before;
-
-            currentRadius += speedOfTransition * Time.deltaTime;
+            currentRadius += speedOfTransition_before * Time.deltaTime;
             circleFade.SetFloat("_Radius", currentRadius);
-
-            if (Mathf.Abs(currentRadius - 0.15f) < 0.01f)
-            {
-                timer = timeToStop;
-                currentRadius = 0.152f;
-            }
-
             yield return null;
         }
 
-        hadStop = false;
+        DoorManager[] doorManagers = FindObjectsOfType<DoorManager>();
+        foreach (DoorManager door in doorManagers)
+        {
+            if (!door.isFinishDoor && door.player_1 == player_1.gameObject)
+            {
+                player_1.gameObject.SetActive(true);
+                yield return StartCoroutine(door.PlayerAnimation(door.player_1, door.maskObject.transform.position, door.transform.position, true));
+                break;
+            }
+        }
+
+        while (currentRadius < 3f)
+        {
+            currentRadius += speedOfTransition_after * Time.deltaTime;
+            circleFade.SetFloat("_Radius", currentRadius);
+            yield return null;
+        }
 
         player_1.canMove = true;
         player_1.gameObject.GetComponent<Shooter>().canShoot = true;
+        player_1.gameObject.GetComponent<Shooter>().aim.gameObject.SetActive(true);
     }
 
     IEnumerator OutroAnimation(MovePlayer player)
     {
-        hadStop = false;
-
         player.canMove = false; player.canPickUpBox = false;
         if (player.gameObject.GetComponent<Shooter>())
         {
             player.gameObject.GetComponent<Shooter>().canShoot = false;
-            player.gameObject.GetComponent<Shooter>().haveBullet = true;
+            player_1.gameObject.GetComponent<Shooter>().aim.gameObject.SetActive(false);
         }
 
         SetCircleOnPos(player.transform.position);
 
-        float currentRadius = 3f, timer = 0;
+        float currentRadius = 3f;
         circleFade.SetFloat("_Radius", currentRadius);
 
-        while (currentRadius >= -0.01f)
+        while (currentRadius > radiusToStop)
         {
-            if (timer > 0)
-            {
-                timer -= Time.deltaTime;
-                hadStop = true;
-                continue;
-            }
-
-            float speedOfTransition = (hadStop) ? speedOfTransition_after : speedOfTransition_before;
-
-            currentRadius -= speedOfTransition * Time.deltaTime;
+            currentRadius -= speedOfTransition_after * Time.deltaTime;
             circleFade.SetFloat("_Radius", currentRadius);
-
-            if (Mathf.Abs(currentRadius - 0.15f) < 0.01f)
-            {
-                timer = timeToStop;
-                currentRadius = 0.148f;
-            }
-
             yield return null;
         }
 
-        hadStop = false;
+        DoorManager[] doorManagers = FindObjectsOfType<DoorManager>();
+        foreach (DoorManager door in doorManagers)
+        {
+            if (door.isFinishDoor && door.player_1 == player.gameObject)
+            {
+                yield return StartCoroutine(door.PlayerAnimation(door.player_1, door.transform.position, door.maskObject.transform.position, false));
+                break;
+            }
+        }
+
+        while (currentRadius > -0.01f)
+        {
+            currentRadius -= speedOfTransition_before * Time.deltaTime;
+            circleFade.SetFloat("_Radius", currentRadius);
+            yield return null;
+        }
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Debug.Log("Next Level!");
     }
 
     public void PlayerInTheDoor(MovePlayer player)
@@ -126,7 +125,6 @@ public class LevelManager : MonoBehaviour
         if (player == player_2 && player_2 != null)
         {
             StartCoroutine(OutroAnimation(player_2));
-            Debug.Log("End of lvl");
         }
         else if (player_2 != null)
         {
@@ -135,6 +133,17 @@ public class LevelManager : MonoBehaviour
             player_1.canMove = false;
             player_1.canPickUpBox = false;
             player_1.gameObject.GetComponent<Shooter>().canShoot = false;
+            player_1.gameObject.GetComponent<Shooter>().aim.gameObject.SetActive(false);
+
+            DoorManager[] doorManagers = FindObjectsOfType<DoorManager>();
+            foreach (DoorManager door in doorManagers)
+            {
+                if (door.isFinishDoor && door.player_1 == player.gameObject)
+                {
+                    StartCoroutine(door.PlayerAnimation(door.player_1, door.transform.position, door.maskObject.transform.position, false));
+                    break;
+                }
+            }
         } else
         {
             StartCoroutine(OutroAnimation(player_1));

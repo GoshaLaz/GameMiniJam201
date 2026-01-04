@@ -198,6 +198,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1915888162}
     - target: {fileID: 870491701640236220, guid: d933593d3fb666c4e940e26408d50e1a, type: 3}
+      propertyPath: fromRight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 870491701640236220, guid: d933593d3fb666c4e940e26408d50e1a, type: 3}
       propertyPath: isFinishDoor
       value: 0
       objectReference: {fileID: 0}
@@ -825,9 +829,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   transitionObject: {fileID: 599443387}
-  speedOfTransition_before: 0.05
-  speedOfTransition_after: 2.25
-  timeToStop: 0.5
+  speedOfTransition_before: 1
+  speedOfTransition_after: 2.5
+  radiusToStop: 0.25
   player_1: {fileID: 117024045}
   player_2: {fileID: 1915888163}
 --- !u!1001 &1146181947
