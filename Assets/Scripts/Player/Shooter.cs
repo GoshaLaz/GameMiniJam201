@@ -3,7 +3,7 @@ using UnityEngine;
 public class Shooter : MonoBehaviour
 {
     [SerializeField] private Transform firePoint;
-    [SerializeField] private Transform aim;
+    [SerializeField] public Transform aim;
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed = 15f;

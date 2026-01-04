@@ -58,7 +58,7 @@ public class DualGridTilemap : MonoBehaviour
     Tilemap invisibleTilemap;
     Color invisibleColor = new Color(1, 1, 1, 0);
 
-    void Awake()
+    void Start()
     {
         float chanceOffset = 0;
 
@@ -152,6 +152,8 @@ public class DualGridTilemap : MonoBehaviour
             }
         }
 
+        invisibleTilemaps[0] = visibleTilemap;
+
         Destroy(objectForInvisibleTilemap);
 
         return visibleTilemap;
@@ -163,6 +165,7 @@ public class DualGridTilemap : MonoBehaviour
         visibleTilemap.name = "Visible Tilemap";
         visibleTilemap.AddComponent<Tilemap>();
         visibleTilemap.AddComponent<TilemapRenderer>();
+        visibleTilemap.GetComponent<TilemapRenderer>().sortingOrder = 2;
 
         visibleTilemap.transform.position = new Vector3(0.5f, 0.5f);
         visibleTilemap.transform.parent = gridObject.transform;

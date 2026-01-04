@@ -8,7 +8,7 @@ public class BulletManager : MonoBehaviour
 
     BoxCollider2D boxCollider;
 
-    private void Awake()
+    private void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
     }

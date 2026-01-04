@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6733628539205287953}
   - component: {fileID: 7426683330848423642}
   - component: {fileID: 8466195183420206813}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,4 +210,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3ce2616fafd63043a215a95bbeb9620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ActivationManager
-  objectToInteract: {fileID: 0}
+  objectsToInteract: []

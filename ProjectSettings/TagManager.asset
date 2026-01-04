@@ -8,20 +8,23 @@ TagManager:
   - Box
   - Mirror
   - Receiver
+  - Lever
+  - Player_1
+  - Player_2
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Ground
+  - 
   - Water
   - UI
   - Rope
   - Mirror/Wall
   - Mirror/Mirror
   - Receiver
-  - 
-  - 
-  - 
+  - Ground/Ground
+  - Ground/Vent
+  - Lever
   - 
   - 
   - 
@@ -44,6 +47,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 1001932057
+    locked: 0
+  - name: Gate
+    uniqueID: 3111466161
+    locked: 0
+  - name: Transition
+    uniqueID: 3735885835
     locked: 0
   m_RenderingLayers:
   - Default

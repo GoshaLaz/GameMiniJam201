@@ -138,8 +138,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LazerManager
   solidLayer:
     serializedVersion: 2
-    m_Bits: 904
+    m_Bits: 1920
   lazerRender: {fileID: 2901643239153496664}
+  isActive: 1
 --- !u!120 &2901643239153496664
 LineRenderer:
   serializedVersion: 2

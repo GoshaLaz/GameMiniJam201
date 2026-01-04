@@ -4,7 +4,7 @@ public class ActivationManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] objectsToInteract;
 
-    private void Awake()
+    private void Start()
     {
         if (objectsToInteract.Length <= 0) Debug.Log("No object to interact");
     }

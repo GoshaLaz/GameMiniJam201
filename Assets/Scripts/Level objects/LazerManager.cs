@@ -4,11 +4,11 @@ public class LazerManager : MonoBehaviour
 {
     [SerializeField] private LayerMask solidLayer;
     [SerializeField] private LineRenderer lazerRender;
+    [SerializeField] private bool isActive = true;
 
     const int MAX_REFLECTIONS = 10;
     const float MAX_DISTANCE = 100f;
 
-    bool isActive = true;
     bool interacted = false;
     bool interactedLastFrame = false;
 

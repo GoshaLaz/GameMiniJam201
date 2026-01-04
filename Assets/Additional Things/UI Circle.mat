@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Rope Material 1
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: UI Circle
+  m_Shader: {fileID: 4800000, guid: c82fd325d0e3bca4eaf2811aaf682b88, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -23,30 +23,21 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: cf21e15d8fa0a1a4398d8c86f84003f7, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MaskTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NormalMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    - _ZWrite: 0
+    - _Radius: 2.381556
+    - _RadiusPx: 130
+    - _ScreenAspect: 1.7777778
+    - _Softness: 0.01
+    - _SoftnessPx: 20
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Center: {r: 0.921875, g: 0.22916667, b: 10, a: 0}
+    - _CenterPx: {r: 0.921875, g: 0.22916667, b: 10, a: 0}
+    - _CenterUV: {r: 0.8805008, g: 0.625, b: 0, a: 0}
+    - _ScreenSize: {r: 640, g: 360, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

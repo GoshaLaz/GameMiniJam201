@@ -2,29 +2,37 @@ using UnityEngine;
 
 public class MovePlayer : MonoBehaviour
 {
-    public float moveSpeed = 8f;
-    public float airControlMultiplier = 0.7f;
+    [SerializeField] private float moveSpeed = 8f;
+    [SerializeField] private float airControlMultiplier = 0.7f;
+    [Space(5)]
+    [SerializeField] private float jumpForce = 14f;
+    [SerializeField] private float coyoteTime = 0.15f;
+    [SerializeField] private float jumpBufferTime = 0.15f;
+    [SerializeField] private float fallMultiplier = 2.5f;
+    [SerializeField] private float lowJumpMultiplier = 2f;
+    [Space(5)]
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius = 0.2f;
+    [SerializeField] private LayerMask groundLayer;
+    [Space(5)]
+    [SerializeField] private float interactionRadius = 2;
+    [SerializeField] private LayerMask interactionLayer;
 
-    public float jumpForce = 14f;
-    public float coyoteTime = 0.15f;
-    public float jumpBufferTime = 0.15f;
-    public float fallMultiplier = 2.5f;
-    public float lowJumpMultiplier = 2f;
+    [HideInInspector] public bool canPickUpBox;
+    [HideInInspector] public bool canMove;
+    [HideInInspector] public bool isFacingRight = true;
 
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayer;
+    GameObject boxToCarry;
 
-    private Rigidbody2D rb;
-    private float moveInput;
-    private float prevVerticalInput;
+    Rigidbody2D rb;
+    float moveInput;
+    float prevVerticalInput;
 
-    private float coyoteTimeCounter;
-    private float jumpBufferCounter;
-    private bool isGrounded;
-    private bool isFacingRight = true;
+    float coyoteTimeCounter;
+    float jumpBufferCounter;
+    bool isGrounded;
 
-    void Awake()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
@@ -34,8 +42,8 @@ public class MovePlayer : MonoBehaviour
         moveInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
-        bool jumpPressed = verticalInput > 0 && prevVerticalInput <= 0;
-        bool jumpHeld = verticalInput > 0;
+        bool jumpPressed = verticalInput > 0 && prevVerticalInput <= 0 && canMove;
+        bool jumpHeld = verticalInput > 0 && canMove;
 
         isGrounded = Physics2D.OverlapCircle(
             groundCheck.position,
@@ -84,10 +92,17 @@ public class MovePlayer : MonoBehaviour
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Interaction();
+        }
     }
 
     void FixedUpdate()
     {
+        if (!canMove) return;
+
         float control = isGrounded ? 1f : airControlMultiplier;
         rb.linearVelocity = new Vector2(moveInput * moveSpeed * control, rb.linearVelocity.y);
 
@@ -97,6 +112,41 @@ public class MovePlayer : MonoBehaviour
             Vector3 currentScale = transform.localScale;
             currentScale.x *= -1;
             transform.localScale = currentScale;
+        }
+    }
+
+    void Interaction()
+    {
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, interactionRadius, Vector2.zero, 0, interactionLayer);
+
+        if (!hit) return;
+
+        if (hit.collider.CompareTag("Lever"))
+        {
+            hit.collider.GetComponent<ActivationManager>().Interaction();
+            hit.collider.GetComponent<LeverManager>().Interaction();
+        }
+        else if (canPickUpBox && hit.collider.CompareTag("Box") && boxToCarry == null && hit.collider.GetComponent<Rigidbody2D>().bodyType != RigidbodyType2D.Static)
+        {
+            boxToCarry = hit.collider.gameObject;
+            boxToCarry.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+            boxToCarry.GetComponent<Collider2D>().enabled = false;
+            boxToCarry.transform.parent = transform;
+            boxToCarry.transform.position = transform.position + new Vector3(1.25f * ((isFacingRight) ? 1 : -1), 0, 0);
+        }
+        else if (boxToCarry != null)
+        {
+            Vector3 checkPos = (transform.position + boxToCarry.transform.position) / 2f;
+            float distanceBtwBoxAndPlayer = Vector3.Distance(transform.position, boxToCarry.transform.position);
+            Vector3 checkSize = new Vector3(distanceBtwBoxAndPlayer, 1, 0);
+            bool canPlaceBox = Physics2D.OverlapBoxAll(checkPos, checkSize, 0, groundLayer).Length <= 0;
+
+            if (!canPlaceBox) return;
+
+            boxToCarry.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+            boxToCarry.GetComponent<Collider2D>().enabled = true;
+            boxToCarry.transform.parent = null;
+            boxToCarry = null;
         }
     }
 }
