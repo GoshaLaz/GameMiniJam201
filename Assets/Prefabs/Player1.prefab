@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5757387847383418969}
   - component: {fileID: 5679801004786152938}
   - component: {fileID: 4069546901581236814}
+  - component: {fileID: 2831434155460711543}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Player_1
@@ -160,6 +161,28 @@ MonoBehaviour:
   bulletSpeed: 12
   canShoot: 1
   haveBullet: 1
+--- !u!95 &2831434155460711543
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301483358183645123}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 11c94805857e2254a93e48f81f7183b1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1298060840685902134
 GameObject:
   m_ObjectHideFlags: 0

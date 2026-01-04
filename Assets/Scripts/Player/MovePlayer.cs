@@ -23,6 +23,8 @@ public class MovePlayer : MonoBehaviour
     [SerializeField] private LayerMask interactionLayer;
     [Space(5)]
     [SerializeField] private float rotationDuration;
+    [Space(5)]
+    [SerializeField] private GameObject tutorial;
 
     [HideInInspector] public bool canPickUpBox;
     [HideInInspector] public bool canMove;
@@ -45,6 +47,7 @@ public class MovePlayer : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        if (tutorial != null) tutorial.SetActive(false);
     }
 
     void Update()
@@ -147,7 +150,7 @@ public class MovePlayer : MonoBehaviour
         {
             hit.collider.GetComponent<ActivationManager>().Interaction();
             hit.collider.GetComponent<LeverManager>().Interaction();
-        } else if (hit.collider.CompareTag("Mirror"))
+        } else if (hit.collider.CompareTag("Mirror") || isInteractingWithMirror)
         {
             if (isInteractingWithMirror) mirrorToRotate = null;
             else mirrorToRotate = hit.collider.gameObject;
@@ -155,6 +158,8 @@ public class MovePlayer : MonoBehaviour
             isInteractingWithMirror = !isInteractingWithMirror;
             moveInput = 0;
             rb.linearVelocity = Vector2.zero;
+
+            if (tutorial != null) tutorial.SetActive(isInteractingWithMirror);
         }
         else if (canPickUpBox && hit.collider.CompareTag("Box") && boxToCarry == null && hit.collider.GetComponent<Rigidbody2D>().bodyType != RigidbodyType2D.Static)
         {

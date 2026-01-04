@@ -27,6 +27,7 @@ public class LevelManager : MonoBehaviour
 
         if (player_1 != null)
             StartCoroutine(IntroAnimation());
+        else StartCoroutine(Intro1Animation());
     }
 
     private void Update()
@@ -94,6 +95,32 @@ public class LevelManager : MonoBehaviour
         player_1.canMove = true;
         player_1.gameObject.GetComponent<Shooter>().canShoot = true;
         player_1.gameObject.GetComponent<Shooter>().aim.gameObject.SetActive(true);
+    }
+
+    IEnumerator Intro1Animation()
+    {
+        Vector3 startPos = new Vector3(0, 4, 0);
+
+        SetCircleOnPos(startPos);
+
+        float currentRadius = -0.01f;
+        circleFade.SetFloat("_Radius", currentRadius);
+
+        while (currentRadius < radiusToStop)
+        {
+            currentRadius += speedOfTransition_before * Time.deltaTime;
+            circleFade.SetFloat("_Radius", currentRadius);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1);
+
+        while (currentRadius < 3f)
+        {
+            currentRadius += speedOfTransition_after * Time.deltaTime;
+            circleFade.SetFloat("_Radius", currentRadius);
+            yield return null;
+        }
     }
 
     IEnumerator OutroAnimation(MovePlayer player)
@@ -173,14 +200,22 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator SimpleOutro2Animation()
     {
-        MovePlayer player = null;
+        if (player_1 != null)
+        {
+            MovePlayer player = null;
 
-        if (player_1.gameObject.transform.localScale == Vector3.zero)
-            player = player_2;
-        else
-            player = player_1;
+            if (player_1.gameObject.transform.localScale == Vector3.zero)
+                player = player_2;
+            else
+                player = player_1;
 
-        SetCircleOnPos(player.transform.position);
+            SetCircleOnPos(player.transform.position);
+        } else
+        {
+            Vector3 startPos = new Vector3(0, 4, 0);
+
+            SetCircleOnPos(startPos);
+        }
 
         float currentRadius = 3f;
         circleFade.SetFloat("_Radius", currentRadius);

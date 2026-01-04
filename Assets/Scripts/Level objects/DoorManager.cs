@@ -14,16 +14,24 @@ public class DoorManager : MonoBehaviour
     [SerializeField] private Vector2 offSet;
     [SerializeField] private float durationOfAnimation;
     [SerializeField] private bool fromRight;
+    [Space(5)]
+    [SerializeField] private GameObject tutorialButton;
+    [SerializeField] private GameObject tutorialButtons;
 
     void Awake()
     {
         doorSigne.SetActive(isFinishDoor);
         maskObject.SetActive(false);
         maskObject.transform.position = transform.position + new Vector3((fromRight) ? -1.13265f: 1.13265f, 0, 0);
+
+        if (tutorialButtons != null)
+            tutorialButtons.SetActive(false);
     }
 
     void Update()
     {
+        tutorialButton.SetActive(false);
+
         RaycastHit2D[] hit = Physics2D.BoxCastAll((Vector2)transform.position + checkCollider.offset, checkCollider.size, 0, Vector2.zero);
 
         if (Input.GetKeyDown(KeyCode.Z) && isFinishDoor) {
@@ -34,7 +42,21 @@ public class DoorManager : MonoBehaviour
                     if (currHit.collider.CompareTag("Player_1") || currHit.collider.CompareTag("Player_2")) {
                         player_1 = currHit.collider.gameObject;
                         levelManager.PlayerInTheDoor(player_1.GetComponent<MovePlayer>());
+
+                        if (tutorialButtons != null)
+                            tutorialButtons.SetActive(true);
                     }
+                }
+            }
+        }
+
+        if (hit.Length > 0 && isFinishDoor)
+        {
+            foreach (RaycastHit2D currHit in hit)
+            {
+                if (currHit.collider.CompareTag("Player_1") || currHit.collider.CompareTag("Player_2"))
+                {
+                    tutorialButton.SetActive(true);
                 }
             }
         }

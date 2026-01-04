@@ -6,12 +6,16 @@ public class RopeManager : MonoBehaviour
     [SerializeField] private GameObject boxObject;
     [Space(4)]
     [SerializeField] private LayerMask layerMask;
+    [Space(5)]
+    [SerializeField] private GameObject tutorial;
 
     LineRenderer lineRenderer;
     BoxCollider2D boxCollider;
 
     void Start()
     {
+        if (tutorial != null) tutorial.SetActive(false);
+
         lineRenderer = GetComponent<LineRenderer>();
         boxCollider  = GetComponent<BoxCollider2D>();
 
@@ -35,5 +39,7 @@ public class RopeManager : MonoBehaviour
     public void FreeTheBox()
     {
         boxObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+
+        if (tutorial != null) tutorial.SetActive(true);
     }
 }
