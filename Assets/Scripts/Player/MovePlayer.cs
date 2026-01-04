@@ -165,6 +165,8 @@ public class MovePlayer : MonoBehaviour
         {
             boxToCarry = hit.collider.gameObject;
             boxToCarry.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+            boxToCarry.GetComponent<Rigidbody2D>().angularVelocity = 0;
+            boxToCarry.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
             boxToCarry.GetComponent<Collider2D>().enabled = false;
             boxToCarry.transform.parent = transform;
             boxToCarry.transform.position = transform.position + new Vector3(1.25f * ((isFacingRight) ? 1 : -1), 0, 0);
